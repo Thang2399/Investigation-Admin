@@ -1,11 +1,12 @@
 <template>
-  <div class="min-h-screen flex flex-col">
+  <div class="max-h-screen h-full d-flex flex-row">
     <!--Sidebar-->
     <Sidebar/>
+
     <!-- Page content -->
-    <main class="flex-1 container mx-auto px-4 py-8">
+    <div class="w-75">
       <slot />
-    </main>
+    </div>
 
   </div>
 </template>

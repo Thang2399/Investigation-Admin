@@ -73,7 +73,7 @@ bun run preview
 ```
 
 ## env
-Create an .env file and paste the following value:
+Create an .env file and paste the following values:
 
 ```
 PORT=
