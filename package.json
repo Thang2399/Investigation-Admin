@@ -19,6 +19,7 @@
     "yup": "^1.7.1"
   },
   "devDependencies": {
+    "@types/node": "^24.7.0",
     "vite-plugin-vuetify": "^2.1.2",
     "vuetify": "^3.10.4"
   }

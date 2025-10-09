@@ -11,6 +11,7 @@ import {
   fieldsNotHavePlaceholderArr,
   selectFieldsArr,
 } from '~/constants/field'
+import {useApi} from "~/composable/useApi";
 
 const form = reactive({
   questionTitle: '',
@@ -198,27 +199,55 @@ const formRef = ref<any>(null)
 const formValid = ref<boolean>(false)
 const submitting = ref(false)
 
+const api = useApi()
+
 function reset() {
+  formRef.value.reset();
   formRef.value?.resetValidation?.()
 }
 
 async function handleSubmit() {
   formRef.value?.validate?.()
   if( formValid.value) {
-    console.log('submit', JSON.parse(JSON.stringify(form)))
+    const formDataObject = JSON.parse(JSON.stringify(form));
+    const payload = {
+      ...formDataObject,
+      options: fieldsHaveOptionsArr.includes(form.questionType) ? formDataObject.options: [],
+      validation: {
+        minLength: formDataObject.minLength,
+        maxLength: formDataObject.maxLength,
+        isRequired: formDataObject.isRequired,
+      },
+      surveyIds: [],
+    };
+    delete payload['minLength']
+    delete payload['maxLength']
+    delete payload['isRequired']
+
+    try {
+      const res = await api.post('/question', payload);
+      console.log('res', res);
+    } catch (err) {
+      console.log('err', err)
+    }
   }
 }
 
 const minOptions = 1
 const maxOptions = 5
 
-function resetOptions(n: number) {
-  const target = Math.max(minOptions, Math.min(maxOptions, Number(n) || 0))
-  const fresh = Array.from({ length: target }, () => ({ label: '', value: '' }))
-  form.options.splice(0, form.options.length, ...fresh) // keep same array ref
+const updateOptions = (n: number) => {
+  const target = Math.max(minOptions, Math.min(maxOptions, Number(n) || 0));
+  const curr = form.options.length;
+
+  if (target > curr) {
+    form.options.push({ label: '', value: '' })
+  } else if (target < curr) {
+    form.options.splice(target)
+  }
 }
 
-watch(() => form.numberOfOptions, resetOptions, { immediate: true })
+watch(() => form.numberOfOptions, updateOptions, { immediate: true })
 
 /* Cross-field revalidation for min/max (Vuetify) */
 watch(() => form.maxLength, async () => {
