@@ -11,7 +11,7 @@ export default defineNuxtConfig({
             apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api',
         },
     },
-    build: { transpile: ['vuetify'] },
+    build: { transpile: ['vuetify', 'vuepic/vue-datepicker'] },
     modules: [
         (_options, nuxt) => {
             nuxt.hooks.hook('vite:extendConfig', (config) => {

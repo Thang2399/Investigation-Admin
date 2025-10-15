@@ -11,6 +11,7 @@ export const FIELD_TYPE = {
     CALENDAR: 'calendar',
     NUMBER: 'number',
     RATING: 'rating',
+    AUTOCOMPLETE: 'autocomplete',
 };
 
 export const fieldsHaveMinAndMaxLengthArr = [QuestionTypeEnum.TextField, QuestionTypeEnum.TextArea];

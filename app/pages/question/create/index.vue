@@ -12,6 +12,7 @@ import {
   selectFieldsArr,
 } from '~/constants/field'
 import {useApi} from "~/composable/useApi";
+import {isIntegerRule, maxGTEminRule, minLTEmaxRule} from "~/helper/rules";
 
 const form = reactive({
   questionTitle: '',
@@ -24,26 +25,6 @@ const form = reactive({
   maxLength: 255,
   isRequired: true,
 })
-
-/* ---------- Rules / helpers ---------- */
-const isEmpty = (v: any) => v === null || v === undefined || v === ''
-
-const isIntegerRule = (msg = 'Must be an integer') => (v: any) =>
-    isEmpty(v) || Number.isInteger(Number(v)) || msg
-
-const minLTEmaxRule = (form: typeof form) => (v: any) => {
-  if (isEmpty(v) || isEmpty(form.maxLength)) return true
-  const min = Number(v)
-  const max = Number(form.maxLength)
-  return (Number.isFinite(min) && Number.isFinite(max) && min <= max) || 'Min length must be ≤ Max length'
-}
-
-const maxGTEminRule = (form: typeof form) => (v: any) => {
-  if (isEmpty(v) || isEmpty(form.minLength)) return true
-  const max = Number(v)
-  const min = Number(form.minLength)
-  return (Number.isFinite(min) && Number.isFinite(max) && max >= min) || 'Max length must be ≥ Min length'
-}
 
 /* ---------- Field configs ---------- */
 const titleField: IFieldProps[] = [
@@ -187,10 +168,6 @@ const isRequiredField: IFieldProps[] = [
     htmlFor: 'isRequired',
     inputName: 'isRequired',
     dataTestId: 'isRequired',
-    options: [
-      { title: 'Yes', value: true },
-      { title: 'No', value: false },
-    ],
   },
 ]
 
@@ -208,7 +185,8 @@ function reset() {
 
 async function handleSubmit() {
   formRef.value?.validate?.()
-  if( formValid.value) {
+  if(formValid.value) {
+    submitting.value = true
     const formDataObject = JSON.parse(JSON.stringify(form));
     const payload = {
       ...formDataObject,
