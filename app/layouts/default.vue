@@ -1,21 +1,11 @@
 <script setup lang="ts">
 // nothing special required
 import { computed, watch, ref  } from 'vue'
+import {useSnackbar} from "~/composable/useSnackBar";
 
 const route = useRoute()            // reactive route object
-const pathname = computed(() => route.path)   // '/admin/surveys' (no query/hash)
-console.log('pathname', pathname)
+const { show, text, color } = useSnackbar()
 
-const currentPath = ref(route.path)   // snapshot at first render
-
-// If you also want it to update later:
-const reactivePath = computed(() => route.path)
-// watch for changes
-watch(() => route.path, (newPath) => {
-  console.log('route changed ->', newPath)
-})
-
-console.log('reactivePath', reactivePath)
 
 /** Pretty print a slug -> Title Case */
 function prettify(slug: string) {
@@ -41,7 +31,6 @@ const crumbs = computed(() => {
   })
 })
 
-console.log(crumbs)
 
 </script>
 
@@ -81,6 +70,9 @@ console.log(crumbs)
 
         </v-breadcrumbs-item>
       </v-breadcrumbs>
+      <v-snackbar v-model="show" :color="color" timeout="3000">
+        {{ text }}
+      </v-snackbar>
 
       <slot />
     </div>

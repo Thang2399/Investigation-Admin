@@ -15,4 +15,4 @@ export const maxGTEminRule = (form: typeof form) => (v: any) => {
     const max = Number(v)
     const min = Number(form.minLength)
     return (Number.isFinite(min) && Number.isFinite(max) && max >= min) || 'Max length must be ≥ Min length'
-}''
+};
