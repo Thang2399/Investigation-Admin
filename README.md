@@ -77,5 +77,7 @@ Create an .env file and paste the following values:
 
 ```
 PORT=
-NUXT_API_BASE_URL=
+COOKIE_NAME=
+NUXT_PUBLIC_API_BASE=
+NUXT_AUTHENTICATION_API_URL=
 ```
